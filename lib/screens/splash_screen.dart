@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:task_management_app/screens/task_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'task_screen.dart';
 import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,11 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginState() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    final SharedPreferences sp = await SharedPreferences.getInstance();
-    final bool isLoggedIn = sp.getBool('isLoggedIn') ?? false;
-
     if (mounted) {
-      if (isLoggedIn) {
+      // Check Firebase Auth current user
+      if (FirebaseAuth.instance.currentUser != null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const TaskScreen()),
@@ -49,9 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Image(
               height: 100,
               width: 100,
-              image: AssetImage(
-                "assets/images/logo.png",
-              ), // Ensure this asset exists
+              image: AssetImage("assets/images/logo.png"),
             ),
             SizedBox(height: 20),
             Text(
